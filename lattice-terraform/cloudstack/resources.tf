@@ -83,7 +83,7 @@ resource "cloudstack_port_forward" "lattice-brain" {
   }
   #COMMON
   provisioner "local-exec" {
-    command = "LOCAL_LATTICE_TAR_PATH=${var.local_lattice_tar_path} LATTICE_VERSION_FILE_PATH=${path.module}/../../Version ${path.module}/../scripts/local/download-lattice-tar"
+    command = "LOCAL_LATTICE_TAR_PATH=${var.local_lattice_tar_path} LATTICE_VERSION_FILE_PATH=${path.module}/../Version ${path.module}/../scripts/local/download-lattice-tar"
     }
 
   provisioner "file" {
@@ -109,7 +109,7 @@ resource "cloudstack_port_forward" "lattice-brain" {
             "sudo mkdir -p /var/lattice/setup",
             "sudo sh -c 'echo \"LATTICE_USERNAME=${var.lattice_username}\" > /var/lattice/setup/lattice-environment'",
             "sudo sh -c 'echo \"LATTICE_PASSWORD=${var.lattice_password}\" >> /var/lattice/setup/lattice-environment'",
-            "sudo sh -c 'echo \"CONSUL_SERVER_IP=${cloudstack_instance.lattice-brain.private_ip}\" >> /var/lattice/setup/lattice-environment'",
+            "sudo sh -c 'echo \"CONSUL_SERVER_IP=${var.lattice_brain_private_ip}\" >> /var/lattice/setup/lattice-environment'",
         ]
     }
 
@@ -133,6 +133,7 @@ resource "cloudstack_instance" "lattice-brain" {
     keypair = "${var.cs_key_name}"
     network = "${cloudstack_network.lattice-network.id}"
     name = "lattice-brain"
+    ipaddress = "${var.lattice_brain_private_ip}"
     zone = "${var.cs_zone}"
     expunge = "true"
 
@@ -167,7 +168,7 @@ resource "cloudstack_port_forward" "lattice-cell" {
 
   #COMMON
    provisioner "local-exec" {
-      command = "LOCAL_LATTICE_TAR_PATH=${var.local_lattice_tar_path} LATTICE_VERSION_FILE_PATH=${path.module}/../../Version ${path.module}/../scripts/local/download-lattice-tar"
+      command = "LOCAL_LATTICE_TAR_PATH=${var.local_lattice_tar_path} LATTICE_VERSION_FILE_PATH=${path.module}/../Version ${path.module}/../scripts/local/download-lattice-tar"
     }
 
    provisioner "file" {

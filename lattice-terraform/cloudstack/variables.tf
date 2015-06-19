@@ -49,6 +49,11 @@ variable "cs_instance_type_cell" {
     default = "t1.micro"
 }
 
+variable "lattice_brain_private_ip" {
+    description = "The private IP reserved for the lattice brain"
+    default = "172.16.1.10"
+}
+
 variable "num_cells" {
     description = "The number of Lattice Cells to launch."
     default = "3"
