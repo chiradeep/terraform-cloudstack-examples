@@ -5,10 +5,18 @@ This project contains [Terraform](https://www.terraform.io/) templates to help y
 [Apache CloudStack](http://www.cloudstack.org/).
 
 ## Usage
+### Prerequisites
+* CloudStack  with Advanced Zone (uses VPC)
+* Any  hypervisor (tested : XenServer 6.5)
+* terraform >= v0.5.3
+* Ubuntu 14.04 template with 'make' and 'gcc' installed
+  (for example: http://dl.openvm.eu/cloudstack/ubuntu/vanilla/14.04/x86_64/  doesn't have it, so the provisioning script for lattice-cell installs gcc and make)
+* API and secret keys for your CloudStack
+* ssh keypair (using `cloudmonkey`: `cloudmonkey create sshkeypair name=lattice`)
 
 ### Configure
 
-Update the `lattice.aws.tf` by filling in the values for the variables.  Details for the values of those variables are below.
+Update the `lattice.cloudstack.tf` by filling in the values for the variables.  Details for the values of those variables are below.
 
 The available variables that can be configured are:
 
@@ -22,6 +30,7 @@ The available variables that can be configured are:
 * `cs_image`: The name of the image to base the launched instances (default `ubuntu trusty 64bit hvm ami`)
 * `cs_instance_type_brain`: The machine type to use for the Lattice Brain instance 
 * `cs_instance_type_cell`: The machine type to use for the Lattice Cells instances 
+* `lattice_brain_private_ip`: Static IP in the subnet cidr block for the brain
 * `num_cells`: The number of Lattice Cells to launch (default `3`)
 * `lattice_username`: Lattice username (default `user`)
 * `lattice_password`: Lattice password (default `pass`)
@@ -31,7 +40,7 @@ The available variables that can be configured are:
 
 Here are some step-by-step instructions for deploying a Lattice cluster via Terraform:
 
-1. Run the following commands in the folder containing the `lattice.aws.tf` file
+1. Run the following commands in the folder containing the `lattice.cloudstack.tf` file
 
   ```bash
   terraform get -update
@@ -65,4 +74,14 @@ Destroy the cluster:
 ```
 terraform destroy
 ```
-
+### How it works
+ - creates a VPC ("name = lattice")
+ - creates ACL to let all ports through on egress and ingress
+ - creates a subnet in the VPC (name = "lattice") and attaches ACL
+ - allocates a new public IP for the VPC
+ - creates lattice-brain VM with static IP
+ - creates port forwarding to the lattice brain ssh port so that terraform remote provisioner can work
+ - creates lattice-cell VMs 
+ - creates port forwarding to the lattice cell ssh ports so that terraform remote provisioner can work
+ - in contrast to AWS recipe, provisioners run on the 'port_forward' resource since they can only work after the port_forward resource is created. The port_forward resource can only work after the VM is created.
+ - 
