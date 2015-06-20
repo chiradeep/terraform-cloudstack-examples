@@ -166,6 +166,13 @@ resource "cloudstack_port_forward" "lattice-cell" {
     virtual_machine = "${element(cloudstack_instance.lattice-cell.*.name, count.index)}"
   }
 
+  connection {
+        host = "${cloudstack_ipaddress.public_ip.ipaddress}"
+        user = "${var.cs_ssh_user}"
+        key_file = "${var.cs_ssh_private_key_file}"
+        port = "${count.index+1223}"
+  }
+
   #COMMON
    provisioner "local-exec" {
       command = "LOCAL_LATTICE_TAR_PATH=${var.local_lattice_tar_path} LATTICE_VERSION_FILE_PATH=${path.module}/../Version ${path.module}/../scripts/local/download-lattice-tar"
@@ -196,6 +203,8 @@ resource "cloudstack_port_forward" "lattice-cell" {
             "sudo sh -c 'echo \"SYSTEM_DOMAIN=${cloudstack_ipaddress.public_ip.ipaddress}.xip.io\" >> /var/lattice/setup/lattice-environment'",
             "sudo sh -c 'echo \"LATTICE_CELL_ID=cell-${count.index}\" >> /var/lattice/setup/lattice-environment'",
             "sudo sh -c 'echo \"GARDEN_EXTERNAL_IP=$(hostname -I | awk '\"'\"'{ print $1 }'\"'\"')\" >> /var/lattice/setup/lattice-environment'",
+            "sudo apt-get -y update",
+            "sudo apt-get -y install gcc make"
         ]
     }
 
