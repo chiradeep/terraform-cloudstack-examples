@@ -6,7 +6,7 @@ This project contains [Terraform](https://www.terraform.io/) templates to help y
 
 ## Usage
 ### Prerequisites
-* CloudStack  with Advanced Zone (uses VPC)
+* CloudStack  with Advanced Zone (uses VPC) (tested 4.5)
 * Any  hypervisor (tested : XenServer 6.5)
 * terraform >= v0.5.3
 * Ubuntu 14.04 template with 'make' and 'gcc' installed
@@ -42,7 +42,7 @@ The available variables that can be configured are:
 
 Here are some step-by-step instructions for deploying a Lattice cluster via Terraform:
 
-1. Run the following commands in the folder containing the `lattice.cloudstack.tf` file
+1. Run the following commands in the new folder containing the `lattice.cloudstack.tf` file
 
   ```bash
   terraform get -update
@@ -67,7 +67,7 @@ Terraform will generate a `terraform.tfstate` file.  This file describes the clu
 
 ### Use
 
-Refer to the [Lattice CLI](../../ltc) documentation.
+Refer to the [Lattice CLI](https://github.com/cloudfoundry-incubator/lattice/tree/master/ltc) documentation.
 
 ### Destroy
 
@@ -76,7 +76,7 @@ Destroy the cluster:
 ```
 terraform destroy
 ```
-### How it works
+### How the terraform script works
  - creates a VPC ("name = lattice")
  - creates ACL to let all ports through on egress and ingress
  - creates a subnet in the VPC (name = "lattice") and attaches ACL
@@ -86,4 +86,4 @@ terraform destroy
  - creates lattice-cell VMs 
  - creates port forwarding to the lattice cell ssh ports so that terraform remote provisioner can work
  - in contrast to AWS recipe, provisioners run on the 'port_forward' resource since they can only work after the port_forward resource is created. The port_forward resource can only work after the VM is created.
- - 
+ 
