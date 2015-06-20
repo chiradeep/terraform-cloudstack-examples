@@ -16,6 +16,8 @@ This project contains [Terraform](https://www.terraform.io/) templates to help y
 
 ### Configure
 
+Clone this repository to your local disk. Copy out the `example/lattice.cloudstack.tf` to another directory. Edit the file to point the `source` variable to the absolute path to the `terraform-cloudstack-examples/lattice-terraform/cloudstack` directory that got created by the `git clone`.
+
 Update the `lattice.cloudstack.tf` by filling in the values for the variables.  Details for the values of those variables are below.
 
 The available variables that can be configured are:
@@ -32,8 +34,8 @@ The available variables that can be configured are:
 * `cs_instance_type_cell`: The machine type to use for the Lattice Cells instances 
 * `lattice_brain_private_ip`: Static IP in the subnet cidr block for the brain
 * `num_cells`: The number of Lattice Cells to launch (default `3`)
-* `lattice_username`: Lattice username (default `user`)
-* `lattice_password`: Lattice password (default `pass`)
+* `lattice_username`: Lattice username (default `lattice`)
+* `lattice_password`: Lattice password (default `lattice`)
 
 
 ### Deploy

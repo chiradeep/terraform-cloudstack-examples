@@ -203,8 +203,8 @@ resource "cloudstack_port_forward" "lattice-cell" {
             "sudo sh -c 'echo \"SYSTEM_DOMAIN=${cloudstack_ipaddress.public_ip.ipaddress}.xip.io\" >> /var/lattice/setup/lattice-environment'",
             "sudo sh -c 'echo \"LATTICE_CELL_ID=cell-${count.index}\" >> /var/lattice/setup/lattice-environment'",
             "sudo sh -c 'echo \"GARDEN_EXTERNAL_IP=$(hostname -I | awk '\"'\"'{ print $1 }'\"'\"')\" >> /var/lattice/setup/lattice-environment'",
-            "sudo apt-get -y update",
-            "sudo apt-get -y install gcc make"
+            "sudo apt-get -qq -y update",
+            "sudo apt-get -qq -y install gcc make"
         ]
     }
 
