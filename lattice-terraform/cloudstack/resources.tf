@@ -141,11 +141,10 @@ resource "cloudstack_instance" "lattice-brain" {
 }
 
 resource "cloudstack_instance" "lattice-cell" {
-    depends_on = ["cloudstack_ipaddress.public_ip"]
-    depends_on = ["cloudstack_instance.lattice-brain"]
+    depends_on = ["cloudstack_ipaddress.public_ip", "cloudstack_instance.lattice-brain"]
     count = "${var.num_cells}"
     template = "${var.cs_image}"
-    service_offering = "${var.cs_instance_type_brain}"
+    service_offering = "${var.cs_instance_type_cell}"
     keypair = "${var.cs_key_name}"
     network = "${cloudstack_network.lattice-network.id}"
     name = "cell-${count.index}"
